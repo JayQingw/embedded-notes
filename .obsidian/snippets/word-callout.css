@@ -1,0 +1,72 @@
+/* 保存为 word-callout.css */
+.callout[data-callout="info"] {
+    /* 1. 卡片整体配色 */
+    --callout-color: 43, 87, 154;
+    /* 图标颜色：Word 经典蓝 (#2B579A) */
+    background-color: #F8FAFC;
+    /* 卡片底色：极浅冷灰 */
+    border: 1px solid #E2E8F0;
+    /* 卡片外边框 */
+    border-left: 4px solid #2B579A;
+    /* 左侧 Word 蓝强调线 */
+    border-radius: 6px;
+    padding: 16px 22px;
+}
+
+/* 2. 折叠栏标题样式 */
+.callout[data-callout="info"] .callout-title {
+    color: #2B579A;
+    font-weight: 600;
+}
+
+/* 3. 正文行距与字体颜色 */
+.callout[data-callout="info"] .callout-content {
+    color: #1F2328;
+    line-height: 1.75;
+    margin-top: 12px;
+}
+
+/* 4. 行内代码样式 */
+.callout[data-callout="info"] code {
+    background-color: #EEF2F6;
+    color: #0F172A;
+    padding: 2px 6px;
+    border-radius: 4px;
+}
+
+/* 5. 表格完整网格分割线（新增） */
+.callout[data-callout="info"] table {
+    width: 100%;
+    border-collapse: collapse;
+    /* 合并相邻边框，避免双线 */
+    margin-top: 14px;
+    background-color: #FFFFFF;
+    /* 表格内部纯白底色，增强对比 */
+}
+
+.callout[data-callout="info"] th,
+.callout[data-callout="info"] td {
+    border: 1px solid #CBD5E1 !important;
+    /* 强制开启上下左右四边分割线（行间+列间） */
+    padding: 9px 14px;
+    /* 单元格内边距，防止文字紧贴分割线 */
+    text-align: left;
+    vertical-align: middle;
+}
+
+/* 6. 表头独立配色，区分标题与位定义 */
+.callout[data-callout="info"] th {
+    background-color: #EEF3F8;
+    /* 淡 Word 蓝灰表头底色 */
+    color: #2B579A;
+    /* 表头文字色号 */
+    font-weight: 600;
+}
+
+/* 7. 防止前两列（位域、控制位）因窄屏发生折行 */
+.callout[data-callout="info"] th:nth-child(1),
+.callout[data-callout="info"] td:nth-child(1),
+.callout[data-callout="info"] th:nth-child(2),
+.callout[data-callout="info"] td:nth-child(2) {
+    white-space: nowrap;
+}

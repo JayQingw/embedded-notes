@@ -1,0 +1,12 @@
+{
+  "monospaceFontFamily": "",
+  "cssTheme": "Things",
+  "theme": "moonstone",
+  "textFontFamily": "",
+  "accentColor": "#5c82f5",
+  "showRibbon": false,
+  "enabledCssSnippets": [
+    "fix-bold",
+    "word-callout"
+  ]
+}
