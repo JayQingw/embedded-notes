@@ -3,7 +3,7 @@
 ### 1.1 DMA 是什么？
 
 DMA（Direct Memory Access，直接存储器访问）是一种允许硬件在**不需要 CPU 逐个搬运数据**的情况下，完成数据传输的机制。
-![[DMA框图.jpg]]
+![DMA框图](../../Attachments/DMA%E6%A1%86%E5%9B%BE.jpg)
 在**没有 DMA** 时，CPU 是怎样搬运数据的？
 假设我们需要通过 SPI 向 LCD 发送一个数组
 
@@ -67,8 +67,8 @@ SPI 内部**状态寄存器(SPI_SR)** 有一个重要标志：
 
 STM32F103C8T6 的 DMA1，包含 7 个 DMA Channel。Channel 可以理解为 DMA 控制器中相对独立的传输通道，分别具有自己的配置和状态。
 STM32F103 的 DMA 请求映射主要是**固定**的，但在较新的系列中有灵活 DMAMUX 请求映射能力。
-![[DMA Channel映射.png]]
-![[DMA1请求映像.jpg]]
+![DMA Channel映射](../../Attachments/DMA%20Channel%E6%98%A0%E5%B0%84.png)
+![DMA1请求映像](../../Attachments/DMA1%E8%AF%B7%E6%B1%82%E6%98%A0%E5%83%8F.jpg)
 
 ```mermaid
 flowchart LR
@@ -106,7 +106,7 @@ flowchart LR
 | ***Peripheral Data Width*** | ***Byte***                 | ***每次向 SPI 写入 8 bit***           |
 | ***Memory Data Width***     | ***Byte***                 | ***每次读取一个 8-bit 元素***            |
 | ***Priority***              | ***Low / Medium***         | ***DMA 通道之间的仲裁优先级***             |
-![[DMA Request Settings.png]]
+![DMA Request Settings](../../Attachments/DMA%20Request%20Settings.png)
 Memory Data Width 为 Byte，并且 Memory Increment  Address开启，那么 DMA 每完成一次数据搬运，下一次就访问下一个字节地址。
 如果数据宽度设置为 Half Word（16 bit），地址递增步长则相应变成 2 字节。
 
@@ -133,7 +133,7 @@ Circular 模式下（**CIRC=1**），传输数量及内部使用的地址位置�
 | ***`DMA_ISR`***    | ***读取 DMA 中断及状态标志***                  |
 | ***`DMA_IFCR`***   | ***清除 DMA 对应标志***                     |
 > [!info]- `DMA_CCRx` — DMA 通道 x 配置寄存器
-> ![[DMA_CCRx(x = 1…7).png]]
+> ![DMA_CCRx(x = 1…7)](../../Attachments/DMA_CCRx%28x%20%3D%201%E2%80%A67%29.png)
 >
 > | 位域 | 控制位 | 核心功能与取值 |
 > | :--- | :--- | :--- |
@@ -147,7 +147,7 @@ Circular 模式下（**CIRC=1**），传输数量及内部使用的地址位置�
 > | `0` | **EN** | 通道使能：`0` 关闭 · `1` 开启 |
 
 > [!info]- `DMA_CNDTRx` — DMA 通道 x 传输数量寄存器 
-> *![[DMA_CNDTRx(x = 1…7).png]]*
+> *![DMA_CNDTRx(x = 1…7)](../../Attachments/DMA_CNDTRx%28x%20%3D%201%E2%80%A67%29.png)*
 > - **NDT[15:0]** (位 15:0): 剩余待传输数据项数量 (范围 `0 ~ 65535`)
 >   - **写入限制**: 只能在通道关闭 (`DMA_CCRx` 的 `EN = 0`) 时写入。
 >   - **硬件自减**: 每次数据传输后自动递减；若开启循环模式 (`CIRC = 1`)，减到 `0` 后自动重载初始值。
@@ -169,21 +169,21 @@ flowchart LR
 *%%注意：==🟡**DMA 完成**表示已经完成了指定数量的总线数据搬运；**SPI 完成**则要求最后的数据已经通过 SPI 移位寄存器实际发送完毕。二者并不是同一时刻。%%*==
 
 > [!info]- `DMA_CPARx` — DMA 通道 x 外设地址寄存器
-> ![[DMA_CMARx(x = 1…7).png]]
+> ![DMA_CPARx(x = 1…7)](../../Attachments/DMA_CPARx%28x%20%3D%201%E2%80%A67%29.png)
 >
 > | 位域 | 控制位 | 核心功能与限制 |
 > | :--- | :--- | :--- |
 > | `31:0` | **PA[31:0]** | 外设数据寄存器基地址：仅在 `EN = 0` 时可写（通道开启后只读）；按 `PSIZE` 宽度自动对齐 |
 
 > [!info]- `DMA_CMARx` — DMA 通道 x 存储器地址寄存器
-> ![[DMA_CMARx(x = 1…7).png]]
+> ![DMA_CMARx(x = 1…7)](../../Attachments/DMA_CMARx%28x%20%3D%201%E2%80%A67%29.png)
 >
 > | 位域 | 控制位 | 核心功能与限制 |
 > | :--- | :--- | :--- |
 > | `31:0` | **MA[31:0]** | 存储器缓冲区基地址：仅在 `EN = 0` 时可写（通道开启后只读）；按 `MSIZE` 宽度自动对齐 |
 
 > [!info]- `DMA_ISR` — DMA 中断状态寄存器
-> ![[DMA_ISR.png]]
+> ![DMA_ISR](../../Attachments/DMA_ISR.png)
 >
 > | 位域 | 控制位 | 核心功能与取值 |
 > | :--- | :--- | :--- |
@@ -195,7 +195,7 @@ flowchart LR
 > *注：所有标志位均为硬件置 `1`（只读），需向 `DMA_IFCR` 对应位写 `1` 清除。*
 
 > [!info]- `DMA_IFCR` — DMA 中断标志清除寄存器
-> ![[DMA_IFCR.png]]
+> ![DMA_IFCR](../../Attachments/DMA_IFCR.png)
 >
 > | 位域 | 控制位 | 核心功能与取值 |
 > | :--- | :--- | :--- |
