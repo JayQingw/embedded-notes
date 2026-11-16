@@ -133,7 +133,7 @@ Circular 模式下（**CIRC=1**），传输数量及内部使用的地址位置�
 | ***`DMA_ISR`***    | ***读取 DMA 中断及状态标志***                  |
 | ***`DMA_IFCR`***   | ***清除 DMA 对应标志***                     |
 > [!info]- `DMA_CCRx` — DMA 通道 x 配置寄存器
-> ![DMA_CCRx(x = 1…7)](../../Attachments/DMA_CCRx%28x%20%3D%201%E2%80%A67%29.png)
+> ![DMA_CCRx(x = 1…7)](../../Attachments/DMA_CCRx_1-7.png)
 >
 > | 位域 | 控制位 | 核心功能与取值 |
 > | :--- | :--- | :--- |
@@ -147,7 +147,7 @@ Circular 模式下（**CIRC=1**），传输数量及内部使用的地址位置�
 > | `0` | **EN** | 通道使能：`0` 关闭 · `1` 开启 |
 
 > [!info]- `DMA_CNDTRx` — DMA 通道 x 传输数量寄存器 
-> *![DMA_CNDTRx(x = 1…7)](../../Attachments/DMA_CNDTRx%28x%20%3D%201%E2%80%A67%29.png)*
+> *![DMA_CNDTRx(x = 1…7)](../../Attachments/DMA_CNDTRx_1-7.png)*
 > - **NDT[15:0]** (位 15:0): 剩余待传输数据项数量 (范围 `0 ~ 65535`)
 >   - **写入限制**: 只能在通道关闭 (`DMA_CCRx` 的 `EN = 0`) 时写入。
 >   - **硬件自减**: 每次数据传输后自动递减；若开启循环模式 (`CIRC = 1`)，减到 `0` 后自动重载初始值。
@@ -169,14 +169,14 @@ flowchart LR
 *%%注意：==🟡**DMA 完成**表示已经完成了指定数量的总线数据搬运；**SPI 完成**则要求最后的数据已经通过 SPI 移位寄存器实际发送完毕。二者并不是同一时刻。%%*==
 
 > [!info]- `DMA_CPARx` — DMA 通道 x 外设地址寄存器
-> ![DMA_CPARx(x = 1…7)](../../Attachments/DMA_CPARx%28x%20%3D%201%E2%80%A67%29.png)
+> ![DMA_CPARx(x = 1…7)](../../Attachments/DMA_CPARx_1-7.png)
 >
 > | 位域 | 控制位 | 核心功能与限制 |
 > | :--- | :--- | :--- |
 > | `31:0` | **PA[31:0]** | 外设数据寄存器基地址：仅在 `EN = 0` 时可写（通道开启后只读）；按 `PSIZE` 宽度自动对齐 |
 
 > [!info]- `DMA_CMARx` — DMA 通道 x 存储器地址寄存器
-> ![DMA_CMARx(x = 1…7)](../../Attachments/DMA_CMARx%28x%20%3D%201%E2%80%A67%29.png)
+> ![DMA_CMARx(x = 1…7)](../../Attachments/DMA_CMARx_1-7.png)
 >
 > | 位域 | 控制位 | 核心功能与限制 |
 > | :--- | :--- | :--- |
@@ -291,3 +291,7 @@ flowchart TD
     G1 --> G2 --> G3
 ```
 直到本次传输全部搬运结束。CPU 不需要每次都进入中断写入下一字节。
+
+
+## 六、DMA 中断与 HAL 回调的关系
+### 6.1 为什么 DMA 完成后需要中断？
