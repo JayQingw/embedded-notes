@@ -589,7 +589,7 @@ HAL_SPI_Transmit_DMA(&hspi1, data, 4);
 ```
 
 在启动 DMA 之后，CPU、DMA、SPI 三者会并行工作。
-![[CPU、DMA、SPI并行工作示意.svg|770]]
+![CPU、DMA、SPI并行工作示意](../../Attachments/CPU%E3%80%81DMA%E3%80%81SPI%E5%B9%B6%E8%A1%8C%E5%B7%A5%E4%BD%9C%E7%A4%BA%E6%84%8F.svg)
 当 DMA 将最后一个数据写入 SPI 数据寄存器后，本次 DMA 搬运任务就结束了。但是**对于整个应用程序而言，还有一些工作没有完成**：
 
 - 确认 SPI 是否真正发送完毕。
@@ -607,7 +607,7 @@ HAL_SPI_Transmit_DMA(&hspi1, data, 4);
 #### 6.1.2 CPU 如何知道 DMA 已经完成传输？
 
 在第四章中已经介绍过 `DMA_CNDTR` 寄存器，该寄存器记录 DMA 剩余需要搬运的数据项数量。当 DMA 完成最后一次数据搬运时，硬件会将传输完成标志 TCIF（Transfer Complete Interrupt Flag）置 1。
-![[DMA-CNDTR与TCIF的关系.svg|770]]
+![DMA-CNDTR与TCIF的关系](../../Attachments/DMA-CNDTR%E4%B8%8ETCIF%E7%9A%84%E5%85%B3%E7%B3%BB.svg)
 *Normal 模式下，传输计数与完成标志之间的关系。*
 
 此时，CPU 就可以通过 TCIF 标志位判断 DMA 是否已经完成搬运。但是**标志位置位并不意味着 CPU 会主动执行相应的处理程序。** 标志位只是硬件对事件发生情况的一种记录。
@@ -652,7 +652,7 @@ DMA在什么情况下产生中断，中断请求又是如何传递给CPU的？
 - **TE：传输错误。** 通知 CPU 处理 DMA 搬运过程中出现的错误。
 
 假设现在 DMA 需要搬运 8 个数据：
-![[DMA-HTIF、TCIF置一条件.svg|770]]
+![DMA-HTIF、TCIF置一条件](../../Attachments/DMA-HTIF%E3%80%81TCIF%E7%BD%AE%E4%B8%80%E6%9D%A1%E4%BB%B6.svg)
 在传输过程中，DMA 可以分别产生半完成事件和完成事件。如果对应的中断已经使能，就可以通知 CPU 处理这些事件。
 半完成中断在 ADC 连续采样、音频数据采集等场景中比较常见，CPU 可以处理缓冲区的前半部分，而 DMA 继续填充后半部分。
 
@@ -668,7 +668,7 @@ DMA1_Channel3->CCR     // 包含 TCIE
 - `TCIE`：决定是否允许该事件产生中断请求。
 
 两者之间的关系可以用一个与门表示。
-![[DMA-TC中断请求.svg|578]]
+![DMA-TC中断请求](../../Attachments/DMA-TC%E4%B8%AD%E6%96%AD%E8%AF%B7%E6%B1%82.svg)
 
 | TCIF3 | TCIE | 是否产生 TC 中断请求 |
 | :---: | :--: | :----------: |
@@ -680,7 +680,7 @@ DMA1_Channel3->CCR     // 包含 TCIE
 #### 6.2.3 DMA 中断请求如何传递给 CPU？
 
 在 DMA 产生中断请求后，还需要经过 NVIC，CPU 才能进入相应的中断服务函数。
-![[DMA-中断传递.svg|583]]
+![DMA-中断传递](../../Attachments/DMA-%E4%B8%AD%E6%96%AD%E4%BC%A0%E9%80%92.svg)
 因此，要让 CPU 正常响应 DMA 完成中断，除了 DMA 内部的 TCIE 使能以外，还需要使能 NVIC 中对应的中断通道。
 
 CubeMX 通常会生成以下代码：
@@ -707,7 +707,7 @@ HAL_NVIC_EnableIRQ(DMA1_Channel3_IRQn);
 - 发送缓冲区（Transmit Buffer）：暂存即将发送的数据，通过 SPI_DR 访问。
 
 - 移位寄存器（Shift Register）：按照 SPI 时钟将数据逐位发送出去。
-![[DMA-SPI内部结构.svg|770]]
+![DMA-SPI内部结构](../../Attachments/DMA-SPI%E5%86%85%E9%83%A8%E7%BB%93%E6%9E%84.svg)
 ***DMA 的职责到将数据写入 SPI_DR 为止，之后的数据转移和逐位发送都由 SPI 硬件完成。所以 DMA 搬运完成时，SPI 内部可能仍然存在尚未发出的数据。***
 
 #### 6.3.2 TXE 与 BSY 标志位
@@ -721,7 +721,7 @@ HAL_NVIC_EnableIRQ(DMA1_Channel3_IRQn);
 
 由于发送缓冲区中的数据需要转移到移位寄存器，因此 TXE = 1 时，SPI 仍然可能正在发送数据。
 
-![[DMA发送时序图.svg|770]]
+![DMA发送时序图](../../Attachments/DMA%E5%8F%91%E9%80%81%E6%97%B6%E5%BA%8F%E5%9B%BE.svg)
 
 阶段一中，DMA 已经将最后一个字节写入发送缓冲区，但 SPI 仍在发送前一个字节。阶段二中，发送缓冲区虽然为空，最后一个字节却仍在通过 MOSI 输出。只有到了阶段三，SPI 才退出忙状态。
 
@@ -742,7 +742,7 @@ HAL_NVIC_EnableIRQ(DMA1_Channel3_IRQn);
 DMA 是一个通用的数据搬运外设，它不仅可以服务于 SPI，还可以服务于 UART、ADC、I2C 等外设。
 
 然而，不同外设在 DMA 完成搬运后，需要执行的后续处理并不相同。
-![[DMA-外设完成处理.svg|661]]
+![DMA-外设完成处理](../../Attachments/DMA-%E5%A4%96%E8%AE%BE%E5%AE%8C%E6%88%90%E5%A4%84%E7%90%86.svg)
 不同外设需要不同的传输完成处理逻辑。
 
 如果将所有外设的处理逻辑都写在 DMA 中断处理函数中，就会导致 DMA 驱动与其他外设驱动高度耦合。
@@ -775,7 +775,7 @@ hspi->hdmatx->XferErrorCallback = SPI_DMAError;
 
 上述赋值操作并不是在调用 `SPI_DMATransmitCplt()`，而是在保存该函数的地址，告诉 DMA 驱动：当本次传输完成时，应当调用这个函数。
 
-![[DMA-回调注册.svg|657]]
+![DMA-回调注册](../../Attachments/DMA-%E5%9B%9E%E8%B0%83%E6%B3%A8%E5%86%8C.svg)
 
 这样一来，DMA 驱动就不需要知道当前正在为哪个外设服务，只需要在对应事件发生时调用已经设置好的回调函数即可。
 
@@ -783,9 +783,9 @@ hspi->hdmatx->XferErrorCallback = SPI_DMAError;
 
 当 DMA 完成数据搬运之后，CPU 将依次执行以下几个函数。
 
-![[DMA-中断回调链路.svg]]
+![DMA-中断回调链路](../../Attachments/DMA-%E4%B8%AD%E6%96%AD%E5%9B%9E%E8%B0%83%E9%93%BE%E8%B7%AF.svg)
 
-![[DMA-中断嵌套关系.svg|770]]
+![DMA-中断嵌套关系](../../Attachments/DMA-%E4%B8%AD%E6%96%AD%E5%B5%8C%E5%A5%97%E5%85%B3%E7%B3%BB.svg)
 
 #### 6.5.1 DMA1_Channel3_IRQHandler()
 
@@ -855,7 +855,7 @@ DMA 层传入的是 DMA 句柄，但当前函数需要操作 SPI 外设，因此
 
 SPI 句柄与 DMA 句柄之间建立了双向关联。
 
-![[DMA-句柄关联.svg|770]]
+![DMA-句柄关联](../../Attachments/DMA-%E5%8F%A5%E6%9F%84%E5%85%B3%E8%81%94.svg)
 
 因此可以通过以下代码获得 SPI 句柄：
 
@@ -884,7 +884,7 @@ SPI_HandleTypeDef *hspi =
 
 7. 根据错误状态，调用用户的完成回调或错误回调。
 
-![[DMA-SPI完成回调.svg|770]]
+![DMA-SPI完成回调](../../Attachments/DMA-SPI%E5%AE%8C%E6%88%90%E5%9B%9E%E8%B0%83.svg)
 
 这里需要特别注意，DMA 的状态与 SPI 的状态是相互独立的：
 
@@ -950,7 +950,7 @@ void HAL_SPI_TxCpltCallback(SPI_HandleTypeDef *hspi)
 
 因此，它们仍然处于中断上下文（Interrupt Context）中。
 
-![[DMA-中断上下文.svg|770]]
+![DMA-中断上下文](../../Attachments/DMA-%E4%B8%AD%E6%96%AD%E4%B8%8A%E4%B8%8B%E6%96%87.svg)
 
 这也解释了为什么在 DMA 完成回调中使用 FreeRTOS API 时，需要使用带有 `FromISR` 后缀的版本。
 
@@ -966,7 +966,7 @@ void HAL_SPI_TxCpltCallback(SPI_HandleTypeDef *hspi)
 
 现在可以结合整个执行过程，重新理解第二章提到的 DMA Request 和 DMA Interrupt。
 
-![[DMA-Request与Interrupt.svg|770]]
+![DMA-Request与Interrupt](../../Attachments/DMA-Request%E4%B8%8EInterrupt.svg)
 
 |对比项|DMA Request|DMA Interrupt|
 |---|---|---|
