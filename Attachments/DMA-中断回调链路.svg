@@ -1,0 +1,81 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1000" height="760" viewBox="0 0 1000 760" role="img" aria-labelledby="title desc">
+<title id="title">SPI DMA 发送完成：从硬件中断到应用回调</title><desc id="desc">STM32F103 SPI1 TX DMA1 Channel 3 普通模式，五层调用链，区分 DMA 与 SPI 状态恢复并标出完成及错误回调。</desc>
+<defs><marker id="arrow" markerWidth="7" markerHeight="7" refX="6" refY="3.5" orient="auto" markerUnits="userSpaceOnUse"><path d="M0 0 L6 3.5 L0 7" fill="none" stroke="#84929f" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></marker></defs>
+<rect x="0" y="0" width="1000" height="760" rx="0" fill="#f7f9fb" stroke="none" stroke-width="1"/>
+<text x="26" y="43" font-family="Noto Sans CJK SC, Microsoft YaHei, sans-serif" font-size="27" font-weight="700" fill="#172332" text-anchor="start">SPI DMA 发送完成：中断与回调链路</text>
+<text x="27" y="72" font-family="DejaVu Sans Mono, Consolas, monospace" font-size="14" font-weight="400" fill="#657487" text-anchor="start">STM32F103  /  SPI1 TX  /  DMA1 Channel 3  /  Normal mode</text>
+<rect x="26" y="91" width="948" height="84" rx="10" fill="#ffffff" stroke="#dce3e9" stroke-width="1"/>
+<rect x="26" y="91" width="151" height="84" rx="10" fill="#edf2f8" stroke="none" stroke-width="1"/>
+<rect x="167" y="91" width="10" height="84" rx="0" fill="#edf2f8" stroke="none" stroke-width="1"/>
+<line x1="177" y1="92" x2="177" y2="174" stroke="#e1e6eb" stroke-width="1" stroke-linecap="round"/>
+<text x="42" y="120" font-family="DejaVu Sans Mono, Consolas, monospace" font-size="13" font-weight="700" fill="#46658b" text-anchor="start">01</text>
+<text x="42" y="145" font-family="Noto Sans CJK SC, Microsoft YaHei, sans-serif" font-size="19" font-weight="700" fill="#46658b" text-anchor="start">硬件层</text>
+<text x="42" y="167" font-family="DejaVu Sans Mono, Consolas, monospace" font-size="12" font-weight="400" fill="#46658b" text-anchor="start">HARDWARE</text>
+<text x="196" y="119" font-family="DejaVu Sans Mono, Consolas, monospace" font-size="20" font-weight="700" fill="#172332" text-anchor="start">DMA1 Channel 3</text>
+<text x="196" y="146" font-family="Noto Sans CJK SC, Microsoft YaHei, sans-serif" font-size="17" font-weight="400" fill="#435262" text-anchor="start">最后一项写入 SPI DR；DMA 搬运完成，但 SPI 可能仍在发送。</text>
+<text x="196" y="166" font-family="Noto Sans CJK SC, Microsoft YaHei, sans-serif" font-size="14" font-weight="400" fill="#566579" text-anchor="start">CNDTR = 0，TCIF3 = 1；若 TCIE = 1，则提出中断请求。</text>
+<line x1="204" y1="177" x2="204" y2="188" stroke="#84929f" stroke-width="1.5" stroke-linecap="round" marker-end="url(#arrow)"/>
+<rect x="26" y="191" width="948" height="76" rx="10" fill="#ffffff" stroke="#dce3e9" stroke-width="1"/>
+<rect x="26" y="191" width="151" height="76" rx="10" fill="#edf2f8" stroke="none" stroke-width="1"/>
+<rect x="167" y="191" width="10" height="76" rx="0" fill="#edf2f8" stroke="none" stroke-width="1"/>
+<line x1="177" y1="192" x2="177" y2="266" stroke="#e1e6eb" stroke-width="1" stroke-linecap="round"/>
+<text x="42" y="220" font-family="DejaVu Sans Mono, Consolas, monospace" font-size="13" font-weight="700" fill="#46658b" text-anchor="start">02</text>
+<text x="42" y="245" font-family="Noto Sans CJK SC, Microsoft YaHei, sans-serif" font-size="19" font-weight="700" fill="#46658b" text-anchor="start">中断入口</text>
+<text x="196" y="220" font-family="DejaVu Sans Mono, Consolas, monospace" font-size="20" font-weight="700" fill="#172332" text-anchor="start">DMA1_Channel3_IRQHandler()</text>
+<text x="196" y="246" font-family="Noto Sans CJK SC, Microsoft YaHei, sans-serif" font-size="17" font-weight="400" fill="#435262" text-anchor="start">NVIC 仲裁后 CPU 根据中断向量表进入 ISR，并调用 DMA HAL 处理函数。</text>
+<line x1="204" y1="269" x2="204" y2="280" stroke="#84929f" stroke-width="1.5" stroke-linecap="round" marker-end="url(#arrow)"/>
+<rect x="26" y="283" width="948" height="103" rx="10" fill="#ffffff" stroke="#dce3e9" stroke-width="1"/>
+<rect x="26" y="283" width="151" height="103" rx="10" fill="#e8f3ee" stroke="none" stroke-width="1"/>
+<rect x="167" y="283" width="10" height="103" rx="0" fill="#e8f3ee" stroke="none" stroke-width="1"/>
+<line x1="177" y1="284" x2="177" y2="385" stroke="#e1e6eb" stroke-width="1" stroke-linecap="round"/>
+<text x="42" y="312" font-family="DejaVu Sans Mono, Consolas, monospace" font-size="13" font-weight="700" fill="#28765f" text-anchor="start">03</text>
+<text x="42" y="337" font-family="Noto Sans CJK SC, Microsoft YaHei, sans-serif" font-size="19" font-weight="700" fill="#28765f" text-anchor="start">DMA 层</text>
+<text x="42" y="359" font-family="DejaVu Sans Mono, Consolas, monospace" font-size="12" font-weight="400" fill="#28765f" text-anchor="start">HAL DRIVER</text>
+<text x="196" y="310" font-family="DejaVu Sans Mono, Consolas, monospace" font-size="20" font-weight="700" fill="#172332" text-anchor="start">HAL_DMA_IRQHandler(&amp;hdma_spi1_tx)</text>
+<text x="196" y="337" font-family="Noto Sans CJK SC, Microsoft YaHei, sans-serif" font-size="17" font-weight="400" fill="#435262" text-anchor="start">识别 TC 事件，关闭 TC / TE 中断、恢复 DMA 状态、清除 TCIF3 并解锁。</text>
+<text x="196" y="363" font-family="DejaVu Sans Mono, Consolas, monospace" font-size="15" font-weight="400" fill="#28765f" text-anchor="start">hdma-&gt;XferCpltCallback(hdma)</text>
+<text x="480" y="363" font-family="Noto Sans CJK SC, Microsoft YaHei, sans-serif" font-size="15" font-weight="400" fill="#657487" text-anchor="start">（指向 SPI 内部完成回调）</text>
+<rect x="738" y="291" width="218" height="29" rx="6" fill="#e8f3ee" stroke="none" stroke-width="1"/>
+<text x="749" y="311" font-family="DejaVu Sans Mono, Consolas, monospace" font-size="14" font-weight="400" fill="#28765f" text-anchor="start">hdma-&gt;State = READY</text>
+<line x1="204" y1="388" x2="204" y2="399" stroke="#84929f" stroke-width="1.5" stroke-linecap="round" marker-end="url(#arrow)"/>
+<rect x="26" y="402" width="948" height="163" rx="10" fill="#ffffff" stroke="#dce3e9" stroke-width="1"/>
+<rect x="26" y="402" width="151" height="163" rx="10" fill="#fbf1e3" stroke="none" stroke-width="1"/>
+<rect x="167" y="402" width="10" height="163" rx="0" fill="#fbf1e3" stroke="none" stroke-width="1"/>
+<line x1="177" y1="403" x2="177" y2="564" stroke="#e1e6eb" stroke-width="1" stroke-linecap="round"/>
+<text x="42" y="431" font-family="DejaVu Sans Mono, Consolas, monospace" font-size="13" font-weight="700" fill="#996421" text-anchor="start">04</text>
+<text x="42" y="456" font-family="Noto Sans CJK SC, Microsoft YaHei, sans-serif" font-size="19" font-weight="700" fill="#996421" text-anchor="start">SPI 层</text>
+<text x="42" y="478" font-family="DejaVu Sans Mono, Consolas, monospace" font-size="12" font-weight="400" fill="#996421" text-anchor="start">HAL DRIVER</text>
+<text x="196" y="430" font-family="DejaVu Sans Mono, Consolas, monospace" font-size="20" font-weight="700" fill="#172332" text-anchor="start">SPI_DMATransmitCplt(hdma)</text>
+<text x="196" y="456" font-family="Noto Sans CJK SC, Microsoft YaHei, sans-serif" font-size="17" font-weight="400" fill="#435262" text-anchor="start">通过 hdma-&gt;Parent 获取 hspi；关闭 SPI 错误中断及 TX DMA 请求。</text>
+<text x="196" y="481" font-family="DejaVu Sans Mono, Consolas, monospace" font-size="16" font-weight="400" fill="#76501f" text-anchor="start">SPI_EndRxTxTransaction()</text>
+<rect x="196" y="492" width="225" height="58" rx="7" fill="#f0f4f9" stroke="none" stroke-width="1"/>
+<text x="208" y="511" font-family="Noto Sans CJK SC, Microsoft YaHei, sans-serif" font-size="13" font-weight="500" fill="#46658b" text-anchor="start">先等待发送缓冲区为空</text>
+<text x="208" y="534" font-family="DejaVu Sans Mono, Consolas, monospace" font-size="15" font-weight="400" fill="#46658b" text-anchor="start">TXE = 1</text>
+<rect x="429" y="492" width="225" height="58" rx="7" fill="#fbf1e3" stroke="none" stroke-width="1"/>
+<text x="441" y="511" font-family="Noto Sans CJK SC, Microsoft YaHei, sans-serif" font-size="13" font-weight="500" fill="#996421" text-anchor="start">再等待 SPI 退出忙状态</text>
+<text x="441" y="534" font-family="DejaVu Sans Mono, Consolas, monospace" font-size="15" font-weight="400" fill="#996421" text-anchor="start">BSY = 0</text>
+<rect x="662" y="492" width="294" height="58" rx="7" fill="#e8f3ee" stroke="none" stroke-width="1"/>
+<text x="674" y="511" font-family="Noto Sans CJK SC, Microsoft YaHei, sans-serif" font-size="13" font-weight="500" fill="#28765f" text-anchor="start">收尾处理后恢复 SPI 状态</text>
+<text x="674" y="534" font-family="DejaVu Sans Mono, Consolas, monospace" font-size="15" font-weight="400" fill="#28765f" text-anchor="start">hspi-&gt;State = READY</text>
+<line x1="204" y1="565" x2="204" y2="575" stroke="#84929f" stroke-width="1.5" stroke-linecap="round"/>
+<line x1="204" y1="575" x2="786" y2="575" stroke="#84929f" stroke-width="1.5" stroke-linecap="round"/>
+<line x1="204" y1="575" x2="204" y2="587" stroke="#84929f" stroke-width="1.5" stroke-linecap="round" marker-end="url(#arrow)"/>
+<line x1="786" y1="575" x2="786" y2="587" stroke="#84929f" stroke-width="1.5" stroke-linecap="round" marker-end="url(#arrow)"/>
+<rect x="26" y="589" width="948" height="99" rx="10" fill="#ffffff" stroke="#dce3e9" stroke-width="1"/>
+<rect x="26" y="589" width="151" height="99" rx="10" fill="#f1edf7" stroke="none" stroke-width="1"/>
+<rect x="167" y="589" width="10" height="99" rx="0" fill="#f1edf7" stroke="none" stroke-width="1"/>
+<line x1="177" y1="590" x2="177" y2="687" stroke="#e1e6eb" stroke-width="1" stroke-linecap="round"/>
+<text x="42" y="618" font-family="DejaVu Sans Mono, Consolas, monospace" font-size="13" font-weight="700" fill="#6b567d" text-anchor="start">05</text>
+<text x="42" y="643" font-family="Noto Sans CJK SC, Microsoft YaHei, sans-serif" font-size="19" font-weight="700" fill="#6b567d" text-anchor="start">应用层</text>
+<text x="42" y="665" font-family="DejaVu Sans Mono, Consolas, monospace" font-size="12" font-weight="400" fill="#6b567d" text-anchor="start">USER CODE</text>
+<text x="196" y="611" font-family="Noto Sans CJK SC, Microsoft YaHei, sans-serif" font-size="14" font-weight="700" fill="#28765f" text-anchor="start">正常完成 · ErrorCode = NONE</text>
+<text x="196" y="637" font-family="DejaVu Sans Mono, Consolas, monospace" font-size="17" font-weight="700" fill="#172332" text-anchor="start">HAL_SPI_TxCpltCallback(hspi)</text>
+<text x="196" y="662" font-family="Noto Sans CJK SC, Microsoft YaHei, sans-serif" font-size="15" font-weight="400" fill="#435262" text-anchor="start">例如：拉高 LCD_CS、释放同步信号量。</text>
+<line x1="624" y1="602" x2="624" y2="674" stroke="#e3e7eb" stroke-width="1" stroke-linecap="round"/>
+<text x="643" y="611" font-family="Noto Sans CJK SC, Microsoft YaHei, sans-serif" font-size="14" font-weight="700" fill="#a6534c" text-anchor="start">存在错误 · ErrorCode ≠ NONE</text>
+<text x="643" y="637" font-family="DejaVu Sans Mono, Consolas, monospace" font-size="16" font-weight="700" fill="#8c423e" text-anchor="start">HAL_SPI_ErrorCallback(hspi)</text>
+<text x="643" y="662" font-family="Noto Sans CJK SC, Microsoft YaHei, sans-serif" font-size="15" font-weight="400" fill="#435262" text-anchor="start">执行应用定义的错误处理。</text>
+<line x1="26" y1="701" x2="974" y2="701" stroke="#dce3e9" stroke-width="1" stroke-linecap="round"/>
+<text x="27" y="723" font-family="Noto Sans CJK SC, Microsoft YaHei, sans-serif" font-size="14" font-weight="400" fill="#526174" text-anchor="start">说明：第 02–05 层均在 DMA ISR 上下文中执行；READY 为对应 HAL 状态枚举的简称。</text>
+<text x="27" y="745" font-family="Noto Sans CJK SC, Microsoft YaHei, sans-serif" font-size="13" font-weight="400" fill="#657487" text-anchor="start">仅展开普通模式 TC 完成路径；省略半传输、DMA TE、循环模式及回调注册等分支。</text>
+</svg>

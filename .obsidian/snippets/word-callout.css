@@ -70,3 +70,10 @@
 .callout[data-callout="info"] td:nth-child(2) {
     white-space: nowrap;
 }
+
+body {
+    --file-line-width: 770px;
+    /* Obsidian 默认约为 700px，调大数值即可加宽 */
+    --line-width: 920px;
+    /* 兼容部分第三方主题的自定义行宽变量 */
+}
