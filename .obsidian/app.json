@@ -4,5 +4,7 @@
   "attachmentFolderPath": "Attachments",
   "newFileLocation": "current",
   "readableLineLength": true,
-  "showLineNumber": false
+  "showLineNumber": false,
+  "useMarkdownLinks": true,
+  "newLinkFormat": "relative"
 }

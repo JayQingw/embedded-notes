@@ -979,3 +979,11 @@ void HAL_SPI_TxCpltCallback(SPI_HandleTypeDef *hspi)
 
 DMA Request 解决的是硬件之间的数据搬运问题，DMA Interrupt 解决的是硬件与软件之间的事件通知问题。
 
+
+## 七、HAL 状态管理与异步传输机制
+
+要正确使用 DMA，还需要理解 HAL 的状态管理机制，以及异步传输机制对程序执行流程的影响。
+
+### 7.1 阻塞式传输与非阻塞式传输
+
+
